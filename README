@@ -1,0 +1,47 @@
+viet 1 chuong trinh bằng PHP chay tren may local de cu 10 phut
+đọc ra tất cả các sản phẩm từ trang https://shopee.vn/shop/16461019/search
+lưu tất cả các sản phẩm xuống MySql DB
+
+cụ thể hệ thống cần có những components sau:
+
+1. scheduler viết bằng crontab -> trigger 1 hàm viết bằng php để tạo ra 1 job có format như sau:
+{
+    "url": "https://shopee.vn/shop/16461019/search",
+    "interval": 600
+}
+
+gửi job vào queue dưới
+
+2. queue dùng dev rabbitmq:  http://192.168.4.201:15672/#/queues  dmx_test / dmx_test  (
+tạo 1 exchange mới
+http://192.168.4.201:15672/#/exchanges/%2F/dmx_test_exchange
+,
+mỗi bạn dùng 1 queue
+http://192.168.4.201:15672/#/queues/%2F/anker_1
+http://192.168.4.201:15672/#/queues/%2F/anker_2
+
+)
+
+3. 1 scraper viết bằng PHP luôn luôn chạy background (dùng tmux) lấy job message từ queue ra format thành json có dạng dưới
+
+4. sau khi có thông tin sản phẩm có dạng:
+{
+    "name": "",
+    "url": "",
+    "rrp_price": 0,
+    "sale_price": 0,
+    "stock" : 0
+}
+
+luu xuong 1 table trên mysql với những field tương ứng, dùng auto increment ID
+DB DEV đã cấp quyền, DB tên: test. (tạo table mới cho mỗi bạn)
+
+- dựng 1 backend service viết bằng golang chỉ làm nhiệm vụ downloading, 
+yêu cầu dùng goroutine để chạy multi threading equivalent (x10 threads)
+
+- sửa hàm hiện tại đang dùng php để download 
+   -> đẩy job qua 1 queue (đặt tên là download_jobs) 
+   -> golang backend service bên trên nhận job, download 
+   -> gửi lại kết quả vào 1 queue khác download_results 
+   -> php nhận -> insert xuống DB
+- không chỉ lấy list sản phẩm như hiện tại mà cần lấy details của từng sản phẩm & lưu xuống DB (cần gọi thêm 1 call để get details cho mỗi sản phẩm cấu trúc table products_details tự dựng nhé)
