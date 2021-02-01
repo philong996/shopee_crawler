@@ -2,6 +2,7 @@
   "require": {
     "php-amqplib/php-amqplib": ">=2.9.0",
     "curl/curl": "^2.3",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "elasticsearch/elasticsearch": "^7.0"
   }
 }

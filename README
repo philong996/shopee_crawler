@@ -10,17 +10,7 @@ cụ thể hệ thống cần có những components sau:
     "interval": 600
 }
 
-gửi job vào queue dưới
-
-2. queue dùng dev rabbitmq:  http://192.168.4.201:15672/#/queues  dmx_test / dmx_test  (
-tạo 1 exchange mới
-http://192.168.4.201:15672/#/exchanges/%2F/dmx_test_exchange
-,
-mỗi bạn dùng 1 queue
-http://192.168.4.201:15672/#/queues/%2F/anker_1
-http://192.168.4.201:15672/#/queues/%2F/anker_2
-
-)
+2. queue dùng dev rabbitmq:
 
 3. 1 scraper viết bằng PHP luôn luôn chạy background (dùng tmux) lấy job message từ queue ra format thành json có dạng dưới
 

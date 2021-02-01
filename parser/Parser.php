@@ -1,5 +1,5 @@
 <?php
-include("UtilsDB.php");
+include("./utils/UtilsDB.php");
 
 function parseData($msg, $conn) {
     
@@ -21,11 +21,11 @@ function parseData($msg, $conn) {
         
         // create query
         $sql = "INSERT INTO shopee_product (name, url, rrp_price, sale_price, stock) VALUES ('" . $array_item["name"]. "', '" . $array_item["url"] . "', " . $array_item["rrp_price"] . ", " . $array_item["sale_price"] . ", " . $array_item["stock"] . ");" ; 
-        
+
+        // insert data to database
         ExecuteQuery($sql, $conn);
 
         array_push($result, $array_item);
-
     };
 
     return $result;
